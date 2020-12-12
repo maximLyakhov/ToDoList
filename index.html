@@ -8,20 +8,28 @@
     <link rel='stylesheet' href='/style.css'>
 </head>
 <body>
-    <div class='page'>        
-        <div class='header'>ToDoList</div>
-
+    <div class='header'>
+        ToDoList
+        <div class='switcher'>
+            <select size="1">
+                <option value="1" disabled >Folder </option>
+                <option value="2" selected="selected">All</option>
+                <option value="3" >Done</option>
+                <option value="4">Deleted</option>
+            </select>
+    </div>
+    
+    </div>
+    <div class='page'>
         <div class='listing'>
             <ul class='list'></ul>
         </div>
-        
         <div class='inputFrame'>
             <input id='input' type="text" placeholder="ToBeDone..." autofocus>
             <button class="addToDo">Add ToDo</button>
         </div>
-
-        <div class='footer'>End</div>
     </div>
+    <div class='footer'>End</div>
 <script src='/app.js'></script>
 </body>
 </html>

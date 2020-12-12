@@ -1,22 +1,23 @@
 document.addEventListener('DOMContentLoaded', renderArray);
 
-document.querySelector('.addToDo').addEventListener('click', addToDo);
-let clearInput = document.querySelector('.addToDo');
-let inputEd = document.querySelectorAll('input');
-clearInput.addEventListener('click', () => {
-	inputEd.forEach(input => input.value = '');
-});
+let addToDoButton = document.querySelector('.addToDo');
+let inputField = document.querySelector('#input');
 
-// document.querySelector('input').addEventListener('keypress',  (enterino) => {if (enterino.key === 'Enter') addToDo();});
-// clearInput.addEventListener('keypress',  (entered) => {
-// 	if (entered.key === 'Enter'){
-// 		inputEd.forEach(input => input.value = '');
-// 	};
-// });
+addToDoButton.addEventListener('click', addToDo);
+addToDoButton.addEventListener('click', inputFieldClearing);
+
+inputField.addEventListener('keypress', enterino => {
+	if (enterino.key === 'Enter') {
+		addToDo();
+		inputFieldClearing();
+		};
+	}
+);
 
 var container = new Array;
+var deletedItemsContainer = new Array;
 
-function addToDo (){
+function addToDo() {
 	let toDoValue = document.querySelector('input').value;
 	let list = document.querySelector('.list');
 	let li = document.createElement('li');
@@ -25,88 +26,97 @@ function addToDo (){
 		time: date,
 		text: toDoValue,
 	};
-	
-	if (toDoValue.length !== 0 ) {
-	list.appendChild(li).innerHTML = toDoValue;
-	list.appendChild(li).className = `${uniqueToDo.time}`;
 
-	let doneToDo = document.createElement('button');
-	li.appendChild(doneToDo).className = `done ${li.className}`;
-	doneToDo.innerHTML = '✔︎';
-	doneToDo.addEventListener('click', doneToDoFnn);
+	if (toDoValue.length !== 0)
+	{
+		list.appendChild(li).innerHTML = toDoValue;
+		list.appendChild(li).setAttribute = uniqueToDo.time;
 
-	let deleteToDo = document.createElement('button');
-	li.appendChild(deleteToDo).className = `deleted ${li.className}`;
-	deleteToDo.innerHTML = 'X';
-	deleteToDo.addEventListener('click', deleteToDoFnn);
+		let doneToDo = document.createElement('button');
+		li.appendChild(doneToDo).className = `done ${li.className}`;
+		doneToDo.innerHTML = '✔︎';
+		doneToDo.addEventListener('click', doneToDoFnn);
 
-	container.push(uniqueToDo);
-	localStorage.setItem('toDoStorage', JSON.stringify(container));
+		let deleteToDo = document.createElement('button');
+		li.appendChild(deleteToDo).className = `deleted ${li.className}`;
+		deleteToDo.innerHTML = 'X';
+		deleteToDo.addEventListener('click', deleteToDoFnn);
+
+		container.push(uniqueToDo);
+		localStorage.setItem('toDoStorage', JSON.stringify(container));
 	};
 };
 
-function renderArray () {
+function inputFieldClearing() {
+	inputField.value = '';
+};
+
+function renderArray() {
 	container = JSON.parse(localStorage.getItem('toDoStorage') || "[]");
+	deletedItemsContainer = JSON.parse(localStorage.getItem('deletedToDoStorage') || "[]");
 	for (let val of container) {
+		let text = val.text;
+		let time = val.time;
+
 		let list = document.querySelector('.list');
 		let li = document.createElement('li');
 
-		list.appendChild(li).innerHTML = val.text;
-		list.appendChild(li).className = `${val.time}`;
+		list.appendChild(li).innerHTML = text;
+		list.appendChild(li).className = 'todo';
+		list.appendChild(li).setAttribute('id', time);
 
 		let doneToDo = document.createElement('button');
-		li.appendChild(doneToDo).className = `done=${li.className}`;
-		doneToDo.innerHTML = '✔︎';
+		li.appendChild(doneToDo);
+		doneToDo.innerHTML = 'Done!';
 		doneToDo.addEventListener('click', doneToDoFnn);
+
 		let deleteToDo = document.createElement('button');
-		li.appendChild(deleteToDo).className = `deleted=${li.className}`;
-		deleteToDo.innerHTML = 'X';
+		li.appendChild(deleteToDo);
+		deleteToDo.innerHTML = 'Delete!';
 		deleteToDo.addEventListener('click', deleteToDoFnn);
 	};
-}; 
-
-function doneToDoFnn () {
-	let parElem = this.parentElement;
-	const parElemClean = this.parentElement;
-	parElem.innerHTML = '<s>' + parElem.innerHTML + '</s>';
-	if (parElem.innerHTML == parElemClean.innerHTML) {
-		parElem.innerHTML == parElemClean.innerHTML;
-	} else {
-		parElem.innerHTML == parElemClean.innerHTML
-	};
-	// let pickedClass = this.className;
-	// if(pickedClass.value = 'done'){
-	// 	let numericData = pickedClass.replace( /^\D+/g, '');
-	// 	let liDonium = liDone[0].childNodes[0];
-	// 	liDonium.nodeValue = '<s>' + liDonium.nodeValue + '</s>';
-	// 	console.log(liDone);
-	// };
 };
 
-function deleteToDoFnn () {
-	let pickedClass = this.className;
-	console.log(pickedClass);
+function doneToDoFnn() {
+	let currentItem = this.closest('li');
+	currentItem.classList.toggle('todo');
+	currentItem.classList.toggle('alreadydone');
 };
 
-
-// var baton = document.querySelectorAll('[class*="done"]');
-// console.log(baton);
+function deleteToDoFnn() {
+	let currentItem = this.closest('li');
+	let currentItemId = this.parentNode.id;
+	console.log(currentItemId);
+	for(let val of container) {
+		if (val.time == currentItemId){
+			container = container.filter(item => item.time != currentItemId);
+			console.table(container);
+			deletedItemsContainer.push(val);
+			console.table(deletedItemsContainer);
+		}
+	}
+	localStorage.setItem('deletedToDoStorage', JSON.stringify(deletedItemsContainer));
+	currentItem.remove();
+};
 
 /* === pseudocode
 
 draw page from the array or provide functional page without array	+
 add todo must be on enter keypress or button click	+
-adding of todo draws li item + 
-and removes text from input ?
+adding of todo draws li item +
+and removes text from input +
 li item must be with buttons 'done'	+
-'edit' and	?
+
 'delete' which have their id's as well as	+
 saves input into array, which nests in localstorage	+
+
 edit button switches todo li into the input field and waits for changes to be completed
-delete button moves todo instance into 'deleted' folder and separate array
 
-*/ 
+delete button moves todo instance into 'deleted' folder and separate array +
+delete removes parent +
 
-// if delete button class is number, then delete li with such class // or try to remove parent!
-// if edit button class is number, then create input and edit li with such class
-// if done button class is number, then strike through text in li with such class
+edit button creates input and edits this li
+or
+passes the value of  li to the input field and then changes it and clears input
+
+done button strike through text in li + */
