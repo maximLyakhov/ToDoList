@@ -15,7 +15,6 @@ inputField.addEventListener('keypress', enterino => {
 );
 
 var container = new Array;
-var deletedItemsContainer = new Array;
 
 function addToDo() {
 	let toDoValue = document.querySelector('input').value;
@@ -25,6 +24,9 @@ function addToDo() {
 	let uniqueToDo = {
 		time: date,
 		text: toDoValue,
+		done: false,
+		editing: false,
+		deleted: false
 	};
 
 	if (toDoValue.length !== 0)
@@ -33,13 +35,18 @@ function addToDo() {
 		list.appendChild(li).setAttribute = uniqueToDo.time;
 
 		let doneToDo = document.createElement('button');
-		li.appendChild(doneToDo).className = `done ${li.className}`;
-		doneToDo.innerHTML = '✔︎';
+		li.appendChild(doneToDo);
+		doneToDo.innerHTML = 'Done!';
 		doneToDo.addEventListener('click', doneToDoFnn);
 
+		let editToDo = document.createElement('input');
+		li.appendChild(editToDo);
+		editToDo.innerHTML = 'Edit';
+		editToDo.addEventListener('click', editToDoFnn);
+
 		let deleteToDo = document.createElement('button');
-		li.appendChild(deleteToDo).className = `deleted ${li.className}`;
-		deleteToDo.innerHTML = 'X';
+		li.appendChild(deleteToDo);
+		deleteToDo.innerHTML = 'Delete!';
 		deleteToDo.addEventListener('click', deleteToDoFnn);
 
 		container.push(uniqueToDo);
@@ -53,14 +60,11 @@ function inputFieldClearing() {
 
 function renderArray() {
 	container = JSON.parse(localStorage.getItem('toDoStorage') || "[]");
-	deletedItemsContainer = JSON.parse(localStorage.getItem('deletedToDoStorage') || "[]");
 	for (let val of container) {
-		let text = val.text;
-		let time = val.time;
-
 		let list = document.querySelector('.list');
 		let li = document.createElement('li');
-
+		let text = val.text;
+		let time = val.time;
 		list.appendChild(li).innerHTML = text;
 		list.appendChild(li).className = 'todo';
 		list.appendChild(li).setAttribute('id', time);
@@ -70,53 +74,93 @@ function renderArray() {
 		doneToDo.innerHTML = 'Done!';
 		doneToDo.addEventListener('click', doneToDoFnn);
 
+		let editToDo = document.createElement('button');
+		li.appendChild(editToDo);
+		editToDo.innerHTML = 'Edit';
+		editToDo.addEventListener('click', editToDoFnn);
+
 		let deleteToDo = document.createElement('button');
 		li.appendChild(deleteToDo);
 		deleteToDo.innerHTML = 'Delete!';
 		deleteToDo.addEventListener('click', deleteToDoFnn);
+
+		let done = val.done;
+		if (done = true) {
+			list.appendChild(li).classList.toggle('todo');
+			list.appendChild(li).classList.toggle('alreadydone');
+		}
 	};
 };
 
 function doneToDoFnn() {
-	let currentItem = this.closest('li');
+	let currentItem = this.parentNode;
+
+	let currentItemId = this.parentNode.id;
+	for (let val of container){
+		let time = val.time;
+		let done = val.done;
+		if (time == currentItemId) {
+			done= !done;
+		};
 	currentItem.classList.toggle('todo');
 	currentItem.classList.toggle('alreadydone');
+	};
+	localStorage.setItem('toDoStorage', JSON.stringify(container));
+};
+
+function editToDoFnn () {
+	let currentItem = this.parentNode;
+	let editToDo = document.createElement('input');
+	currentItem.appendChild(editToDo);
+
+}
+
+function editToDoApplyFnn () {
+
 };
 
 function deleteToDoFnn() {
 	let currentItem = this.closest('li');
 	let currentItemId = this.parentNode.id;
-	console.log(currentItemId);
+	// если клаcc done, то присвоить значение в эррей
+
 	for(let val of container) {
 		if (val.time == currentItemId){
 			container = container.filter(item => item.time != currentItemId);
-			console.table(container);
-			deletedItemsContainer.push(val);
-			console.table(deletedItemsContainer);
-		}
-	}
-	localStorage.setItem('deletedToDoStorage', JSON.stringify(deletedItemsContainer));
+		};
+	};
+	localStorage.setItem('toDoStorage', JSON.stringify(container));
 	currentItem.remove();
 };
 
+let switcher = document.querySelector('.switcher');
+let selectedValue = switcher.options[switcher.selectedIndex].value;
+
+switch (selectedValue) {
+	case 2:
+		alert('all good!');
+		break;
+	case 3:
+		alert('in progress!');
+		break;
+	case 4:
+		alert('man, u killin me');
+		break;
+};
+
 /* === pseudocode
-
-draw page from the array or provide functional page without array	+
-add todo must be on enter keypress or button click	+
-adding of todo draws li item +
-and removes text from input +
-li item must be with buttons 'done'	+
-
-'delete' which have their id's as well as	+
-saves input into array, which nests in localstorage	+
-
-edit button switches todo li into the input field and waits for changes to be completed
-
-delete button moves todo instance into 'deleted' folder and separate array +
+delete button changes todo instance state into 'deleted' 
 delete removes parent +
 
-edit button creates input and edits this li
-or
-passes the value of  li to the input field and then changes it and clears input
+edit button switches todo li into the input field and waits for changes to be completed
+edit button creates input and edits this li passes the value of  li to the input field and then changes it and clears input*/
 
-done button strike through text in li + */
+class toodu {
+	constructor(toodoo){
+		time = toodoo.time,
+		text = toodoo.value,
+		done = false,
+		editing = false,
+		deleted = false
+	}
+};
