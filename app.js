@@ -39,7 +39,7 @@ function addToDo() {
 		doneToDo.innerHTML = 'Done!';
 		doneToDo.addEventListener('click', doneToDoFnn);
 
-		let editToDo = document.createElement('input');
+		let editToDo = document.createElement('button');
 		li.appendChild(editToDo);
 		editToDo.innerHTML = 'Edit';
 		editToDo.addEventListener('click', editToDoFnn);
@@ -70,7 +70,7 @@ function renderArray() {
 		list.appendChild(li).setAttribute('id', time);
 
 		let doneToDo = document.createElement('button');
-		li.appendChild(doneToDo);
+		li.appendChild(doneToDo).className = 'bdone';
 		doneToDo.innerHTML = 'Done!';
 		doneToDo.addEventListener('click', doneToDoFnn);
 
@@ -133,34 +133,18 @@ function deleteToDoFnn() {
 	currentItem.remove();
 };
 
-let switcher = document.querySelector('.switcher');
-let selectedValue = switcher.options[switcher.selectedIndex].value;
+// let switcher = document.querySelector('.switcher');
+// let selectedValue = switcher.options[switcher.selectedIndex].value;
+//
+// switch (selectedValue) {
+// 	case 2:
+// 		alert('all good!');
+// 		break;
+// 	case 3:
+// 		alert('in progress!');
+// 		break;
+// 	case 4:
+// 		alert('man, u killin me');
+// 		break;
+// };
 
-switch (selectedValue) {
-	case 2:
-		alert('all good!');
-		break;
-	case 3:
-		alert('in progress!');
-		break;
-	case 4:
-		alert('man, u killin me');
-		break;
-};
-
-/* === pseudocode
-delete button changes todo instance state into 'deleted' 
-delete removes parent +
-
-edit button switches todo li into the input field and waits for changes to be completed
-edit button creates input and edits this li passes the value of  li to the input field and then changes it and clears input*/
-
-class toodu {
-	constructor(toodoo){
-		time = toodoo.time,
-		text = toodoo.value,
-		done = false,
-		editing = false,
-		deleted = false
-	}
-};

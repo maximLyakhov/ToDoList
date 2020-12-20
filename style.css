@@ -1,18 +1,17 @@
 body {
-    background-color: bisque;
+    background-color: white;
     font-family: "-apple-system",BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
     background: rgb(200, 220, 231);
     color: black;
-    font-family: 'Poppins';
-    font-size: 24px;
-    margin: 0;
+    font-size: 18px;
+    /* margin: 0;
     overflow-y: scroll;
-    overflow: hidden;
+    overflow: hidden; */
 }
 
 .page {
-    width: 60%;
-    margin: 0 20% 0 20% ;
+    width: 70vw;
+    margin: 0 10vw 0 10vw;
     padding: 0;
     height: 80vh;
     overflow-y: scroll;
@@ -22,70 +21,42 @@ body {
 .header, .footer {
     text-align: center;
     padding: 20px 16px;
-    font-size: 16px;    
+    margin: 6px 2px;
     background-color: rgb(105, 105, 105, 0.2);
 };
 
-.footer {
-    position: relative;
-    height: 56px;
-    top: 56px - 1vh;
-}
-
-.list {
-    width: 400px;
-}
-
-.listing {
-    margin: 0 10% 0 10% ;
-}
-
 .addToDo {
     border: 0;
-    border-radius: 5px;
-    background: #28ad7a;
-    color: #fff;
-    padding: 8px 16px;
-    font-size: 16px;
-    display: inline-block;
-    backdrop-filter: blur(40px);
-    border: solid 2px transparent;
-    background-clip: padding-box;
-    box-shadow: 10px 10px 10px  rgba(46, 54, 68, 0.05);
+    background: grey rgb(105, 105, 105, 0.9);
+    color: black;
+    padding: 8px 8px;
+    font-size: 12px;
 }
 
 .inputFrame {
-    background-color: rgb(255, 255, 255);
-    margin: 0 20% 0 20% ;
+    background-color: grey 0,1;
     display: inline-block;
-    backdrop-filter: blur(40px);
-    border: solid 2px transparent;
-    background-clip: padding-box;
-    box-shadow: 10px 10px 10px  rgba(46, 54, 68, 0.05);
 }
-
-li {
-    margin: 2px;
-    border-radius: 1px;
-    padding: 2px 10px;
-    width: 400px;
-    display: inline-block;
-    background: rgba(255,255,255, 0.1);
-    position: relative;
-    z-index: 1;
-    backdrop-filter: blur(40px);
-    border: solid 4px transparent;
-    background-clip: padding-box;
-    box-shadow: 10px 10px 10px  rgba(46, 54, 68, 0.05);
-};
 
 li.todo {
     text-decoration: none;
-} 
+}
+
 li.alreadydone {
     text-decoration: line-through;
-};
-
-button {
-    display: inline-block;
+    background-color: rgb(105, 105, 105, 0.2);
 }
+
+li.deleted {
+    background-color: rgba(32, 32, 32, 0.5);
+}
+
+li {
+    margin: 5px;
+    border-radius: 5px;
+    padding: 5px 20px;
+    width: 60vw;
+    background: rgba(255,255,255, 0.4);
+    display: flexbox;
+    align-items: flex-end
+};
