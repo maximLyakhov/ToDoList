@@ -38,6 +38,12 @@ body {
     display: inline-block;
 }
 
+
+.hidden {
+    display: none;
+    visibility: hidden;
+}
+
 li.todo {
     text-decoration: none;
 }

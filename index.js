@@ -1,5 +1,7 @@
 let container = new Array
 
+document.getElementById('switcher').options.selectedIndex = 1
+
 const addToDoButton = document.querySelector('.addToDo')
 const inputField = document.querySelector('#input')
 const list = document.querySelector('.list')
@@ -10,7 +12,6 @@ class TodoCreator {
     this.text = input
     this.done = false
     this.editing = false
-    this.deleted = false
     }
 
     get pushing () {
@@ -20,22 +21,17 @@ class TodoCreator {
 }
 
 class LiCreator {
-	constructor(input, id, done, editing, deleted) {
-// написать проверку из switcher        
-        let li = document.createElement('li')
-        list.appendChild(li).innerHTML = input
-        list.appendChild(li).setAttribute('id', id)
-        if (done == true) {
-            li.className = 'alreadydone'
-        }
-        else if (editing == true) {
-            new InputFieldCreator(li, id, true)
-        }
-        else if (deleted == true) {
-            li.className = 'deleted'
-            li.remove()
-        }
-        new ButtonSet(li, 'Edit', 'Done', 'Delete')
+	constructor(input, id, done, editing) {
+            let li = document.createElement('li')
+            list.appendChild(li).innerHTML = input
+            list.appendChild(li).setAttribute('id', id)
+            if (done == true) {
+                li.className = 'alreadydone'
+            }
+            else if (editing == true) {
+                new InputFieldCreator(li, id, true)
+            }
+            new ButtonSet(li, 'Edit', 'Done', 'Delete')
     }
 }
 
@@ -46,6 +42,8 @@ class InputFieldCreator {
         if (boolean == true) {
             selector.appendChild(inputToDo).classList.add(id)
             inputToDo.value = selector.childNodes[0].data
+            inputToDo.focus();
+            inputToDo.select();
             selector.childNodes[0].data = ''
             new InputFieldHook(selector, id)
         }
@@ -57,7 +55,7 @@ class InputFieldCreator {
                 }
             }
             let elements = document.getElementsByClassName(id)
-            while (elements.length > 0) elements[0].remove();
+            while (elements.length > 0) elements[0].remove()
         }
     }
 }
@@ -69,35 +67,44 @@ class InputFieldHook {
         hookedInput.addEventListener('input',  checking)
         hookedInput.addEventListener('keypress', enterino => {
             if (enterino.key === 'Enter') {
-                let elements = document.getElementsByClassName(id)
                 selector.childNodes[0].data = hookedInput.value
-                while (elements.length > 0) elements[0].remove();
+                let elements = document.getElementsByClassName(id)
+                while (elements.length > 0) elements[0].remove()
             }
         }
         )
         function checking () {
             for (let i in container) {
                 if (container[i].id === parseInt(id)) {
-                   container[i].text = this.value
-                   break
+                   container[i].text = this.value.trim()
+                    if(this.value !== ' ' && this.value.length > 0 && this.value !== null) {
+                        localStorage.setItem('ooptodo', JSON.stringify(container))
+                    } else {
+                        container.splice(i, 1)
+                        localStorage.setItem('ooptodo', JSON.stringify(container))
+                        document.getElementById(id).remove()
+                    }
+                    break
                 }
             }
-            localStorage.setItem('ooptodo', JSON.stringify(container))
         }
     }
 }
 
 class ButtonSet {
     constructor(selector, name, name2, name3){
-        let buttonEdit = document.createElement('button')
-        selector.appendChild(buttonEdit).innerHTML = name
-		selector.appendChild(buttonEdit).addEventListener('click', editToDoButton)
-        let buttonDone = document.createElement('button')
-        selector.appendChild(buttonDone).innerHTML = name2
-		selector.appendChild(buttonDone).addEventListener('click', doneToDoButton)
-        let buttonDelete = document.createElement('button')
-        selector.appendChild(buttonDelete).innerHTML = name3
-		selector.appendChild(buttonDelete).addEventListener('click', deleteToDoButton)
+        if (name !== undefined){
+            let buttonEdit = document.createElement('button')
+            selector.appendChild(buttonEdit).innerHTML = name
+            selector.appendChild(buttonEdit).addEventListener('click', editToDoButton)}
+        if (name2 !== undefined){
+            let buttonDone = document.createElement('button')
+            selector.appendChild(buttonDone).innerHTML = name2
+            selector.appendChild(buttonDone).addEventListener('click', doneToDoButton)}
+        if (name3 !== undefined){
+            let buttonDelete = document.createElement('button')
+            selector.appendChild(buttonDelete).innerHTML = name3
+            selector.appendChild(buttonDelete).addEventListener('click', deleteToDoButton)}
     }
 }
 
@@ -115,16 +122,50 @@ inputField.addEventListener('keypress', enterino => {
 function renderArray () {
     container = JSON.parse(localStorage.getItem('ooptodo') || "[]")
     for (let val of container) {
-        new LiCreator(val.text, val.id, val.done, val.editing, val.deleted)
+        new LiCreator(val.text, val.id, val.done, val.editing)
     }
+
 }
+
+document.getElementById('switcher').addEventListener('input', function switcher () {
+    let switcherValue = document.getElementById('switcher').options.selectedIndex
+    function resetVisibility () {
+        let resetter = Array.from(document.querySelectorAll('li'))
+        resetter.forEach(function(selector){
+            selector.classList.remove('hidden')})
+    }
+    switch (switcherValue) {
+        case 1:
+            resetVisibility ()
+            let alltd = Array.from(document.querySelectorAll('li'))
+            alltd.forEach(function (selector){
+                selector.classList.remove('hidden')
+            })
+            break
+        case 2:
+            resetVisibility ()
+            let currenttd = Array.from(document.querySelectorAll('.alreadydone'))
+            currenttd.forEach(function (selector) {
+                selector.classList.add('hidden');
+              });
+            break
+        case 3:
+            resetVisibility ()
+            let donetd = Array.from(document.querySelectorAll('ul > li:not(.alreadydone)'))
+            donetd.forEach(function (selector) {
+                selector.classList.add('hidden');
+              });
+            break
+    }
+})
 
 function addToDo(){
     let input = document.querySelector('#input').value
     let date = Date.now()
-    if (input != 0 || '') {
-        new LiCreator(input, date)
-        new TodoCreator(input, date).pushing
+    let replaced = input.replace(/^\s+|\s+$/gm,'')
+    if (replaced.length != 0 & replaced != ' ') {
+        new LiCreator(replaced, date)
+        new TodoCreator(replaced, date).pushing
     }
 }
 
@@ -158,29 +199,14 @@ function doneToDoButton() {
     localStorage.setItem('ooptodo', JSON.stringify(container))
 }
 
-function deleteToDoButton() {
-	let currentItem = this.parentNode
-	let currentItemId = this.parentNode.id
-
-    for (let i in container) {
-        if (container[i].id == currentItemId) {
-           container[i].deleted = !container[i].deleted
-           break
+function deleteToDoButton () {
+    let currentItem = this.parentNode
+    let currentItemId = this.parentNode.id
+    for(let val of container) {
+        if (val.id == currentItemId){
+            container = container.filter(item => item.id != currentItemId)
+            localStorage.setItem('ooptodo', JSON.stringify(container))
         }
     }
-    currentItem.style.display = 'none'
-	localStorage.setItem('ooptodo', JSON.stringify(container))
-};
-
-// function deleteToDoPermanently () {
-//     let currentItem = this.parentNode
-// 	let currentItemId = this.parentNode.id
-// 	for(let val of container) {
-// 		if (val.id == currentItemId){
-// 			container = container.filter(item => item.id != currentItemId)
-// 		}
-//     }
-//     currentItem.remove()
-// }
-
-document.querySelector('.switcher').addEventListener('click', () => console.log(this.value))
+    currentItem.remove()
+}
