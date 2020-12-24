@@ -8,30 +8,44 @@ const list = document.querySelector('.list')
 
 class TodoCreator {
     constructor(input, id) {
-    this.id = id
-    this.text = input
-    this.done = false
-    this.editing = false
+        this.id = id
+        this.text = input
+        this.done = false
+        this.editing = false
     }
-
     get pushing () {
         container.push(this)
+        // or unshift
         localStorage.setItem('ooptodo', JSON.stringify(container))
     }
 }
 
-class LiCreator {
+class LiCreate {
 	constructor(input, id, done, editing) {
-            let li = document.createElement('li')
-            list.appendChild(li).innerHTML = input
-            list.appendChild(li).setAttribute('id', id)
-            if (done == true) {
-                li.className = 'alreadydone'
-            }
-            else if (editing == true) {
-                new InputFieldCreator(li, id, true)
-            }
-            new ButtonSet(li, 'Edit', 'Done', 'Delete')
+        let li = document.createElement('li')
+        list.prepend(li)
+        li.innerHTML = input
+        li.setAttribute('id', id)
+
+        if (done) {
+            li.className = 'alreadydone'
+        }
+        if (editing) {
+            new InputFieldCreator(li, id, true)
+        }
+        new ButtonSet(li, 'Edit', 'Done', 'Delete')
+    }
+}
+
+class LiCreateInProgress {
+    constructor(){
+
+    }
+}
+
+class LiCreateDone {
+    constructor(){
+
     }
 }
 
@@ -39,19 +53,20 @@ class InputFieldCreator {
     constructor(selector, id, boolean) {
         this.id = id
         let inputToDo = document.createElement('input')
-        if (boolean == true) {
-            selector.appendChild(inputToDo).classList.add(id)
+        if (boolean) {
             inputToDo.value = selector.childNodes[0].data
+            selector.prepend(inputToDo)
+            inputToDo.classList.add(id)
             inputToDo.focus();
             inputToDo.select();
-            selector.childNodes[0].data = ''
+            selector.childNodes[1].data = ''
             new InputFieldHook(selector, id)
         }
-        if (boolean == false) {
+        if (!boolean) {
             for (let i in container) {
                 if (container[i].id === parseInt(id)) {
-                    selector.childNodes[0].data = container[i].text
-                   break
+                    selector.childNodes[1].data = container[i].text
+                    break
                 }
             }
             let elements = document.getElementsByClassName(id)
@@ -76,39 +91,100 @@ class InputFieldHook {
         function checking () {
             for (let i in container) {
                 if (container[i].id === parseInt(id)) {
-                   container[i].text = this.value.trim()
-                    if(this.value !== ' ' && this.value.length > 0 && this.value !== null) {
-                        localStorage.setItem('ooptodo', JSON.stringify(container))
-                    } else {
+                    container[i].text = this.value
+                        .trim()
+                        .replace(/^\s+|\s+$/gm,'')
+                    if (this.value !== ' ' && this.value.length > 0 && this.value !== null) {} else {
                         container.splice(i, 1)
-                        localStorage.setItem('ooptodo', JSON.stringify(container))
                         document.getElementById(id).remove()
                     }
+                    localStorage.setItem('ooptodo', JSON.stringify(container))
                     break
                 }
             }
         }
     }
 }
-
+// switch here
 class ButtonSet {
     constructor(selector, name, name2, name3){
-        if (name !== undefined){
-            let buttonEdit = document.createElement('button')
-            selector.appendChild(buttonEdit).innerHTML = name
-            selector.appendChild(buttonEdit).addEventListener('click', editToDoButton)}
-        if (name2 !== undefined){
-            let buttonDone = document.createElement('button')
-            selector.appendChild(buttonDone).innerHTML = name2
-            selector.appendChild(buttonDone).addEventListener('click', doneToDoButton)}
-        if (name3 !== undefined){
-            let buttonDelete = document.createElement('button')
-            selector.appendChild(buttonDelete).innerHTML = name3
-            selector.appendChild(buttonDelete).addEventListener('click', deleteToDoButton)}
+        new EditButton(selector, document.createElement('button'), name)
+        new DoneButton(selector, document.createElement('button'), name2)
+        new DeleteButton(selector, document.createElement('button'), name3)
     }
 }
 
-document.addEventListener('DOMContentLoaded', renderArray)
+class EditButton {
+    constructor(selector, attachment, name) {
+        selector.appendChild(attachment).innerHTML = name
+        selector.appendChild(attachment).addEventListener('click', () =>
+            {
+            for (let i in container) {
+                if (container[i].id === parseInt(selector.id)) {
+                   container[i].editing = !container[i].editing
+                   container[i].editing ? 
+                   new InputFieldCreator (selector, selector.id, true)
+                   : 
+                   new InputFieldCreator (selector, selector.id, false)
+                   break
+                }
+            }
+            localStorage.setItem('ooptodo', JSON.stringify(container))
+            }
+        )
+    }
+}
+
+class DoneButton {
+    constructor(selector, attachment, name) {
+        selector.appendChild(attachment).innerHTML = name
+        selector.appendChild(attachment).addEventListener('click', () =>
+            {
+            for (let i in container) {
+                if (container[i].id === parseInt(selector.id)) {
+                   container[i].done = !container[i].done
+                   break
+                }
+            }
+            selector.classList.toggle('alreadydone')
+            localStorage.setItem('ooptodo', JSON.stringify(container))
+            }
+        )
+    }
+}
+
+class DeleteButton {
+    constructor(selector, attachment, name) {
+        selector.appendChild(attachment).innerHTML = name
+        selector.appendChild(attachment).addEventListener('click', () =>
+            {
+            for(let i in container) {
+                if (container[i].id === parseInt(selector.id)) {
+                container.splice(i, 1)
+                }
+            }
+            localStorage.setItem('ooptodo', JSON.stringify(container))
+            selector.remove()
+            }
+        )
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function renderArray () {
+    container = JSON.parse(localStorage.getItem('ooptodo') || "[]")
+
+// place switch here with
+// array methods to pick done and undone items
+// then new LiCreate
+// new licreateinprogress
+// new licreatedone
+// with only needed buttons
+
+    for (let val of container) {
+        new LiCreate(val.text, val.id, val.done, val.editing)
+    }
+})
+
 addToDoButton.addEventListener('click', addToDo)
 addToDoButton.addEventListener('click', inputFieldClearing)
 inputField.addEventListener('keypress', enterino => {
@@ -119,94 +195,90 @@ inputField.addEventListener('keypress', enterino => {
 	}
 )
 
-function renderArray () {
-    container = JSON.parse(localStorage.getItem('ooptodo') || "[]")
-    for (let val of container) {
-        new LiCreator(val.text, val.id, val.done, val.editing)
-    }
-
+function inputFieldClearing() {
+	inputField.value = ''
 }
 
+document.getElementById('itemsOnPage').addEventListener('input', function itemsOnPage () {
+    let selectedRange = parseInt(document.getElementById('itemsOnPage').value)
+    let pageNumber = 0
+    let tempArray = []
+    let pages = []
+    // let times = Math.ceil(container.length / selectedRange)
+    // console.log(times);
+    for (let i = 0; i < container.length; i += selectedRange) {
+        tempArray = container.slice(i, i + selectedRange);
+        pageNumber++
+        console.log(tempArray);
+        pages.push(pageNumber)
+    }
+    // i should nest arrays into new array from container
+    new Paginator(pages)
+    }
+)
+
 document.getElementById('switcher').addEventListener('input', function switcher () {
-    let switcherValue = document.getElementById('switcher').options.selectedIndex
-    function resetVisibility () {
+    (function resetVisibility () {
         let resetter = Array.from(document.querySelectorAll('li'))
         resetter.forEach(function(selector){
             selector.classList.remove('hidden')})
-    }
+    })()
+    let switcherValue = document.getElementById('switcher').options.selectedIndex
+    let action = new String;
     switch (switcherValue) {
         case 1:
-            resetVisibility ()
-            let alltd = Array.from(document.querySelectorAll('li'))
-            alltd.forEach(function (selector){
-                selector.classList.remove('hidden')
-            })
+            elements = Array.from(document.querySelectorAll('li'));
+            action = 'remove'
             break
         case 2:
-            resetVisibility ()
-            let currenttd = Array.from(document.querySelectorAll('.alreadydone'))
-            currenttd.forEach(function (selector) {
-                selector.classList.add('hidden');
-              });
+            elements = Array.from(document.querySelectorAll('.alreadydone'))
+            action = 'add'
             break
         case 3:
-            resetVisibility ()
-            let donetd = Array.from(document.querySelectorAll('ul > li:not(.alreadydone)'))
-            donetd.forEach(function (selector) {
-                selector.classList.add('hidden');
-              });
+            elements = Array.from(document.querySelectorAll('ul > li:not(.alreadydone)'))
+            action = 'add'
             break
+    }
+    toggleVisibleElements(elements,  action)
+    function toggleVisibleElements(elements, action)  {
+        elements.forEach(function (selector) {
+            action == 'add' ? selector.classList.add('hidden') : selector.classList.remove('hidden') 
+          })
     }
 })
 
 function addToDo(){
     let input = document.querySelector('#input').value
+        .replace(/^\s+|\s+$/gm,'')
     let date = Date.now()
-    let replaced = input.replace(/^\s+|\s+$/gm,'')
-    if (replaced.length != 0 & replaced != ' ') {
-        new LiCreator(replaced, date)
-        new TodoCreator(replaced, date).pushing
+    if (input.length != 0 & input != ' ') {
+        new LiCreate(input, date)
+        new TodoCreator(input, date).pushing
     }
 }
 
-function inputFieldClearing() {
-	inputField.value = ''
+class PageContent {
+    constructor(val) {
+        let page = document.querySelector('.pages')
+        let li = document.createElement('li')
+        page.appendChild(li)
+        li.innerHTML = val
+    }
 }
 
-function editToDoButton () {
-    let currentItem = this.parentNode
-    let currentItemId = this.parentNode.id
-    for (let i in container) {
-        if (container[i].id === parseInt(currentItemId)) {
-           container[i].editing = !container[i].editing
-           container[i].editing == true ? new InputFieldCreator (currentItem, currentItemId, true) : new InputFieldCreator (currentItem, currentItemId, false)
-           break
+class Paginator {
+    constructor(array){
+        let node = document.querySelector('.pages');
+        while (node.firstChild) {
+            node.removeChild(node.lastChild)
         }
+        array.forEach((i)=> {
+            let paginator = document.querySelector('.pages')
+            let button = document.createElement('button')
+            paginator.appendChild(button)
+            paginator.appendChild(button).className = 'pageButton'
+            paginator.appendChild(button).innerHTML = i
+            paginator.appendChild(button).addEventListener('click', () => console.log(i))
+        })
     }
-    localStorage.setItem('ooptodo', JSON.stringify(container))
-}
-
-function doneToDoButton() {
-	let currentItem = this.parentNode
-	let currentItemId = this.parentNode.id
-    for (let i in container) {
-        if (container[i].id === parseInt(currentItemId)) {
-           container[i].done = !container[i].done
-           break
-        }
-    }
-	currentItem.classList.toggle('alreadydone')
-    localStorage.setItem('ooptodo', JSON.stringify(container))
-}
-
-function deleteToDoButton () {
-    let currentItem = this.parentNode
-    let currentItemId = this.parentNode.id
-    for(let val of container) {
-        if (val.id == currentItemId){
-            container = container.filter(item => item.id != currentItemId)
-            localStorage.setItem('ooptodo', JSON.stringify(container))
-        }
-    }
-    currentItem.remove()
 }

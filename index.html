@@ -9,10 +9,16 @@
 </head>
 <body>
     <div class='header'>
-        <div>ToDoList</div>
+        <div>
+            chat with futureself
+        </div>
+        <div class='inputFrame'>
+            <input id='input' type="text" placeholder="ToBeDone..." autofocus>
+            <button class="addToDo">Add ToDo</button>
+        </div>
         <div>
             <select size="1" id="switcher">
-                <option value="0" disabled >Folder </option>
+                <option disabled >Folder</option>
                 <option value="1" selected="selected">All</option>
                 <option value="2" >In progress</option>
                 <option value="3">Done</option>
@@ -20,18 +26,22 @@
         </div>
     </div>
     <div class='page'>
-            <ul class='list'></ul>
+            <ul class='list'>
+
+            </ul>
     </div>
     <div class='footer'>
-        <!-- <svg class="bi bi-chevron-right" width="16" height="16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M6.646 3.646a.5.5 0 01.708 0l6 6a.5.5 0 010 .708l-6 6a.5.5 0 01-.708-.708L12.293 10 6.646 4.354a.5.5 0 010-.708z"/></svg> -->
-        <div class='inputFrame'>
-            <input id='input' type="text" placeholder="ToBeDone..." autofocus>
-            <button class="addToDo">Add ToDo</button>
-
-            <div id="box1"></div>
-            <div id="box2"></div>
-            <div id="circle"></div>
-        </div>
+            <div>
+                <select id="itemsOnPage">
+                    <option disabled>items on page</option>
+                    <option value="5">5</option>
+                    <option value="10" selected="selected">10</option>
+                    <option value="20">20</option>
+                </select>
+            </div>
+            <div class="pages">
+            
+            </div>
     </div>
 <script src='/index.js'></script>
 </body>
