@@ -32,7 +32,7 @@ class LiCreate {
 	constructor(input, id, done, editing) {
         let li = document.createElement('li')
         list.prepend(li)
-        li.innerHTML = input
+        li.textContent = input
         li.setAttribute('id', id)
 
         if (done) {
@@ -83,6 +83,10 @@ class InputFieldCreator {
     }
 }
 
+
+// implement https://developer.mozilla.org/en-US/docs/Web/API/Node/replaceChild
+
+
 class InputFieldHook {
     constructor(selector, id) {
         this.id = id
@@ -94,8 +98,7 @@ class InputFieldHook {
                 let elements = document.getElementsByClassName(id)
                 while (elements.length > 0) elements[0].remove()
             }
-        }
-        )
+        })
         function checking () {
             for (let i in container) {
                 if (container[i].id === parseInt(id)) {
@@ -124,7 +127,7 @@ class ButtonSet {
 
 class EditButton {
     constructor(selector, attachment, name) {
-        selector.appendChild(attachment).innerHTML = name
+        selector.appendChild(attachment).textContent = name
         selector.appendChild(attachment).addEventListener('click', () =>
             {
             for (let i in container) {
@@ -145,7 +148,7 @@ class EditButton {
 
 class DoneButton {
     constructor(selector, attachment, name) {
-        selector.appendChild(attachment).innerHTML = name
+        selector.appendChild(attachment).textContent = name
         selector.appendChild(attachment).addEventListener('click', () =>
             {
             for (let i in container) {
@@ -163,7 +166,7 @@ class DoneButton {
 
 class DeleteButton {
     constructor(selector, attachment, name) {
-        selector.appendChild(attachment).innerHTML = name
+        selector.appendChild(attachment).textContent = name
         selector.appendChild(attachment).addEventListener('click', () =>
             {
             for(let i in container) {
@@ -262,7 +265,7 @@ class Paginator {
                 let createPageButton = document.createElement('button')
                 let page = paginator.appendChild(createPageButton)
                 page.className = 'pageButton'
-                page.innerHTML = number
+                page.textContent = number
                 page.addEventListener('click', () => pagePickContent(number, selectedRange))})
         } else {
             liEraser();
@@ -298,7 +301,7 @@ class PageCreate {
             let input = array[item].text    
             let li = document.createElement('li')
             list.appendChild(li)
-            li.innerHTML = input
+            li.textContent = input
             li.setAttribute('id', id)
             new ButtonSet(li, 'Edit', 'Done', 'Delete')
         }
