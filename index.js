@@ -1,3 +1,12 @@
+// place switch with
+// array methods to pick done and undone items
+// then new LiCreate
+// new licreateinprogress
+// new licreatedone
+// with only appropriate buttons
+// make pages render only selected state items and based on pick range
+// make page buttons interactive and logical
+
 let container = new Array
 
 document.getElementById('switcher').options.selectedIndex = 1
@@ -169,17 +178,9 @@ class DeleteButton {
     }
 }
 
-document.addEventListener('DOMContentLoaded', renderArray())
+document.addEventListener('DOMContentLoaded', renderArray)
 function renderArray () {
     container = JSON.parse(localStorage.getItem('ooptodo') || "[]")
-
-// place switch here with
-// array methods to pick done and undone items
-// then new LiCreate
-// new licreateinprogress
-// new licreatedone
-// with only appropriate buttons
-
     for (let val of container) {
         new LiCreate(val.text, val.id, val.done, val.editing)
     }
