@@ -15,7 +15,6 @@ class TodoCreator {
     }
     get pushing () {
         container.push(this)
-        // or unshift
         localStorage.setItem('ooptodo', JSON.stringify(container))
     }
 }
@@ -55,7 +54,7 @@ class InputFieldCreator {
         let inputToDo = document.createElement('input')
         if (boolean) {
             inputToDo.value = selector.childNodes[0].data
-            selector.prepend(inputToDo)
+            selector.prepend(inputToDo) //or appendChild
             inputToDo.classList.add(id)
             inputToDo.focus();
             inputToDo.select();
@@ -105,7 +104,7 @@ class InputFieldHook {
         }
     }
 }
-// switch here
+
 class ButtonSet {
     constructor(selector, name, name2, name3){
         new EditButton(selector, document.createElement('button'), name)
@@ -170,7 +169,8 @@ class DeleteButton {
     }
 }
 
-document.addEventListener('DOMContentLoaded', function renderArray () {
+document.addEventListener('DOMContentLoaded', renderArray())
+function renderArray () {
     container = JSON.parse(localStorage.getItem('ooptodo') || "[]")
 
 // place switch here with
@@ -178,12 +178,12 @@ document.addEventListener('DOMContentLoaded', function renderArray () {
 // then new LiCreate
 // new licreateinprogress
 // new licreatedone
-// with only needed buttons
+// with only appropriate buttons
 
     for (let val of container) {
         new LiCreate(val.text, val.id, val.done, val.editing)
     }
-})
+}
 
 addToDoButton.addEventListener('click', addToDo)
 addToDoButton.addEventListener('click', inputFieldClearing)
@@ -198,24 +198,6 @@ inputField.addEventListener('keypress', enterino => {
 function inputFieldClearing() {
 	inputField.value = ''
 }
-
-document.getElementById('itemsOnPage').addEventListener('input', function itemsOnPage () {
-    let selectedRange = parseInt(document.getElementById('itemsOnPage').value)
-    let pageNumber = 0
-    let tempArray = []
-    let pages = []
-    // let times = Math.ceil(container.length / selectedRange)
-    // console.log(times);
-    for (let i = 0; i < container.length; i += selectedRange) {
-        tempArray = container.slice(i, i + selectedRange);
-        pageNumber++
-        console.log(tempArray);
-        pages.push(pageNumber)
-    }
-    // i should nest arrays into new array from container
-    new Paginator(pages)
-    }
-)
 
 document.getElementById('switcher').addEventListener('input', function switcher () {
     (function resetVisibility () {
@@ -257,28 +239,71 @@ function addToDo(){
     }
 }
 
-class PageContent {
-    constructor(val) {
-        let page = document.querySelector('.pages')
-        let li = document.createElement('li')
-        page.appendChild(li)
-        li.innerHTML = val
+document.getElementById('itemsOnPage').addEventListener('input', function itemsOnPage () {
+    let selectedRange = parseInt(document.getElementById('itemsOnPage').value)
+    let pageCount = Math.ceil(container.length / selectedRange)
+    new Paginator(pageCount, selectedRange)
+})
+
+class Paginator {
+    constructor(value, selectedRange) {
+        let paginator = document.querySelector('.pages')
+        while (paginator.firstChild) {
+            paginator.removeChild(paginator.lastChild)
+        }
+        if (value > 1) {
+            let pageCount = value
+            let pageArray = [];
+            for (let i=1; i <= pageCount; i++) {
+                pageArray.push(i);
+            }
+            pageArray.forEach((number) => {
+                let createPageButton = document.createElement('button')
+                let page = paginator.appendChild(createPageButton)
+                page.className = 'pageButton'
+                page.innerHTML = number
+                page.addEventListener('click', () => pagePickContent(number, selectedRange))})
+        } else {
+            liEraser();
+            renderArray();
+        }
     }
 }
 
-class Paginator {
-    constructor(array){
-        let node = document.querySelector('.pages');
-        while (node.firstChild) {
-            node.removeChild(node.lastChild)
-        }
-        array.forEach((i)=> {
-            let paginator = document.querySelector('.pages')
-            let button = document.createElement('button')
-            paginator.appendChild(button)
-            paginator.appendChild(button).className = 'pageButton'
-            paginator.appendChild(button).innerHTML = i
-            paginator.appendChild(button).addEventListener('click', () => console.log(i))
-        })
+function pagePickContent (number, selectedRange) {
+    let rangeMultiplier = number * selectedRange
+    console.log('Picked page number: ' + number);
+    let output = new Array
+    let pre = container.slice().reverse()
+    switch (number) {
+        case 1:
+            output = pre.slice((number-1), selectedRange)
+            console.table(output);
+            new PageCreate(output)
+            break;
+        default:
+            output = pre.slice(selectedRange * number - selectedRange, rangeMultiplier)
+            new PageCreate(output)
+            console.table(output);
+            break;
     }
+}
+
+class PageCreate {
+	constructor(array) {
+        liEraser()
+        for (let item in array) {
+            let id = array[item].id
+            let input = array[item].text    
+            let li = document.createElement('li')
+            list.appendChild(li)
+            li.innerHTML = input
+            li.setAttribute('id', id)
+            new ButtonSet(li, 'Edit', 'Done', 'Delete')
+        }
+    }
+}
+
+function liEraser () {
+    while (list.firstChild) {list.removeChild(list.lastChild)}
 }
