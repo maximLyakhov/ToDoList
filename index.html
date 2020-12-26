@@ -8,13 +8,13 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class='header'>
-        <div>
+    <div class='header_'>
+        <div class="motto_">
             chat with futureself
         </div>
-        <div class='inputFrame'>
+        <div class='inputFrame_'>
             <input id='input' type="text" placeholder="ToBeDone..." autofocus>
-            <button class="addToDo">Add ToDo</button>
+            <div class="addToDo"><img src="envelope-fill.svg"></div> 
         </div>
         <div>
             <select size="1" id="switcher">
@@ -25,13 +25,10 @@
             </select>
         </div>
     </div>
-    <div class='page'>
-            <ul class='list'>
-
-            </ul>
-    </div>
-    <div class='footer'>
+    <div class='page_'>
+        <div class="leftField_">
             <div>
+                <div class="pages"></div>
                 <select id="itemsOnPage">
                     <option disabled>items on page</option>
                     <option value="5">5</option>
@@ -39,12 +36,12 @@
                     <option value="20">20</option>
                 </select>
             </div>
-            <div class="pages">
-            
-            </div>
-
-            <ul class="doodle"></ul>
+        </div>
+        <ul class='list'>
+        </ul>
+        <div class="rightfield_"></div>
     </div>
+    <div class='footer_'></div>
 <script src='index.js'></script>
 </body>
 </html>

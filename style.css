@@ -1,53 +1,26 @@
+/* ui/ux specific */
+
+.hidden {
+    display: none;
+}
+
+.alreadydone {
+    text-decoration: line-through;
+    right: 50px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: wheat;
+}
+
+.todo {
+    text-decoration: none;
+    right: -50px;
+}
+/* standard elements stlyle*/
+
 body {
-    background-color: white;
-    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-    background: rgb(200, 220, 231);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: rgb(170, 227, 223);
     color: black;
-    font-size: 18px;
-}
-
-.page {
-    width: 70vw;
-    margin: 0 10vw 0 10vw;
-    padding: 0;
-    height: 80vh;
-    overflow-y: scroll;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-}
-
-.header, .footer {
-    text-align: center;
-    padding: 20px 16px;
-    margin: 6px 2px;
-    background-color: rgb(105, 105, 105, 0.2);
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    position: relative;
-    border-radius: 5px;
-    justify-content: center;
-};
-
-.footer {
-    bottom: 20px;
-    display: flex;
-    flex-direction: column;
-}
-
-.addToDo {
-    border: 0;
-    background: rgba(40, 80, 120, 0.5);
-    color: white;
-    padding: 8px 8px;
-    font-size: 12px;
-    border-radius: 5px;
-}
-
-.inputFrame {
-    background-color: grey 0,1;
-    justify-items: center;
 }
 
 input {
@@ -57,7 +30,8 @@ input {
     font-size: inherit;
     font-family: serif;
     text-align: center;
-    justify-self: auto;
+    padding: 0px 20px;
+    margin: 0px 20px;
 }
 
 select {
@@ -65,70 +39,70 @@ select {
     background-color: transparent;
     display: flex;
     flex-direction: row;
-    font-family: serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 0px 20px;
+    margin: 0px 20px;
 }
 
 button {
     border: none;
-    background: rgba(40, 80, 120, 0.5);
+    background: rgba(255, 127, 80, 0.25);
     border-radius: 5px;
-    padding: 5px;
     margin: 5px;
     color: white;
     justify-self: right;
-    font-family: serif;
-}
-
-.pageButton {
-    background: rgba(40, 80, 120, 0.25);
-    border: none;
-    color: white;
-    padding: 5px 15px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    border-radius: 5px;
-    margin: 2px;
-}
-
-.hidden {
-    display: none;
-    visibility: hidden;
+    padding: 5px 15px;
 }
 
 ul {
     list-style-type: none;
 }
 
-li.todo {
-    text-decoration: none;
-    right: -50px;
-    transition: right 3s cubic-bezier(0.5, 1, 0.89, 1);
-    transition-timing-function: cubic-bezier(0,0,0.58,1);
-}
-
-li.alreadydone {
-    text-decoration: line-through;
-    position: relative;
+ul > li {
     right: 50px;
-    transition: right 3s cubic-bezier(0.445, 0.05, 0.55, 0.95)
-        background-color 2s cubic-bezier(0.215, 0.610, 0.355, 1);
-    transition-timing-function: cubic-bezier(0.455, 0.03, 0.515, 0.955);
-}
-
-li.alreadydone {
-    background-color: rgb(105, 105, 105, 0.2);
-    transition: background-color 2s cubic-bezier(0.215, 0.610, 0.355, 1);
-}
-
-li {
-    right: 10px;
     justify-content: center;
     margin: 5px;
     border-radius: 5px;
     padding: 5px 20px;
-    box-sizing: border-box;
-    width: 400px;
-    background: rgba(255,255,255, 0.4);
+    background: rgba(255,255,255, 0.6);
 };
+
+/* just containers */
+
+.page_ {
+    overflow-y: scroll;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+}
+
+.leftField_, .rightField_ {
+    background-color: rgb(127, 153, 152);
+    flex-direction: column;
+}
+
+.header_, .footer_ {
+    text-align: center;
+    padding: 20px 16px;
+    margin: 6px 2px;
+    background-color: rgb(239, 255, 254);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    position: relative;
+    border-radius: 5px;
+    justify-content: center;
+};
+.inputFrame_ {
+    background-color: grey 0,1;
+    justify-items: center;
+}
+
+.footer_ {
+    bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+

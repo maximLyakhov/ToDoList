@@ -6,6 +6,8 @@
 // with only appropriate buttons
 // make pages render only selected state items and based on pick range
 // make page buttons interactive and logical
+//filtered arrays to lets
+
 
 let container = new Array
 
@@ -45,8 +47,9 @@ class LiCreate {
     }
 }
 
-class LiCreateInProgress {
-    constructor(){
+class LiCreateInProgress extends LiCreate {
+    constructor(input, id, done, editing){
+        super(input, id, done, editing)
 
     }
 }
@@ -63,7 +66,7 @@ class InputFieldCreator {
         let inputToDo = document.createElement('input')
         if (boolean) {
             inputToDo.value = selector.childNodes[0].data
-            selector.prepend(inputToDo) //or appendChild
+            selector.prepend(inputToDo) //or replaceChild
             inputToDo.classList.add(id)
             inputToDo.focus();
             inputToDo.select();
@@ -83,9 +86,7 @@ class InputFieldCreator {
     }
 }
 
-
 // implement https://developer.mozilla.org/en-US/docs/Web/API/Node/replaceChild
-
 
 class InputFieldHook {
     constructor(selector, id) {
@@ -94,7 +95,7 @@ class InputFieldHook {
         hookedInput.addEventListener('input',  checking)
         hookedInput.addEventListener('keypress', enterino => {
             if (enterino.key === 'Enter') {
-                selector.childNodes[0].data = hookedInput.value
+                selector.childNodes[1].data = hookedInput.value
                 let elements = document.getElementsByClassName(id)
                 while (elements.length > 0) elements[0].remove()
             }
@@ -277,18 +278,17 @@ class Paginator {
 function pagePickContent (number, selectedRange) {
     let rangeMultiplier = number * selectedRange
     console.log('Picked page number: ' + number);
-    let output = new Array
-    let pre = container.slice().reverse()
+    let output = new Array;
+    let pre = container.reverse()
+    // rewrite to sort method
     switch (number) {
         case 1:
-            output = pre.slice((number-1), selectedRange)
-            console.table(output);
+            output = pre.slice(0, selectedRange)
             new PageCreate(output)
             break;
         default:
-            output = pre.slice(selectedRange * number - selectedRange, rangeMultiplier)
+            output = pre.slice(selectedRange * (number - 1), rangeMultiplier)
             new PageCreate(output)
-            console.table(output);
             break;
     }
 }
