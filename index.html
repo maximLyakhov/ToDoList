@@ -9,39 +9,35 @@
 </head>
 <body>
     <div class='header_'>
-        <div class="motto_">
-            chat with futureself
-        </div>
-        <div class='inputFrame_'>
-            <input id='input' type="text" placeholder="ToBeDone..." autofocus>
-            <div class="addToDo"><img src="envelope-fill.svg"></div> 
-        </div>
-        <div>
-            <select size="1" id="switcher">
-                <option disabled >Folder</option>
-                <option value="1" selected="selected">All</option>
-                <option value="2" >In progress</option>
-                <option value="3">Done</option>
-            </select>
+        <div class="mottou">To<br>Do<br>Blocks</div>
+        <div class='inputFrame'>
+            <div class="holder"><input id='input' type="text" placeholder="ToBeDone..." autofocus></div>
+            <div class="addToDo">Add!</div>
+            <div class="choosrs">
+                <select id="switcher" size="1">
+                    <option disabled >Folder</option>
+                    <option value="1" selected="selected">All</option>
+                    <option value="2" >In progress</option>
+                    <option value="3">Done</option>
+                </select>
+                <select id="itemsOnPage" size="1">
+                    <option disabled  selected="selected">Items on page</option>
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="reset">Reset</option>
+                    </select>
+                </div>
         </div>
     </div>
     <div class='page_'>
         <div class="leftField_">
-            <div>
-                <div class="pages"></div>
-                <select id="itemsOnPage">
-                    <option disabled>items on page</option>
-                    <option value="5">5</option>
-                    <option value="10" selected="selected">10</option>
-                    <option value="20">20</option>
-                </select>
-            </div>
+            <div class="pages"></div>
         </div>
         <ul class='list'>
         </ul>
         <div class="rightfield_"></div>
     </div>
-    <div class='footer_'></div>
 <script src='index.js'></script>
 </body>
 </html>

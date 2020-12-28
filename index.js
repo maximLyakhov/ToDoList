@@ -6,8 +6,7 @@
 // with only appropriate buttons
 // make pages render only selected state items and based on pick range
 // make page buttons interactive and logical
-//filtered arrays to lets
-
+// filtered arrays to lets
 
 let container = new Array
 
@@ -66,12 +65,13 @@ class InputFieldCreator {
         let inputToDo = document.createElement('input')
         if (boolean) {
             inputToDo.value = selector.childNodes[0].data
-            selector.prepend(inputToDo) //or replaceChild
+            selector.prepend(inputToDo)
             inputToDo.classList.add(id)
             inputToDo.focus();
             inputToDo.select();
             selector.childNodes[1].data = ''
             new InputFieldHook(selector, id)
+            inputToDo.addEventListener('select', resizeInput)
         }
         if (!boolean) {
             for (let i in container) {
@@ -86,13 +86,16 @@ class InputFieldCreator {
     }
 }
 
-// implement https://developer.mozilla.org/en-US/docs/Web/API/Node/replaceChild
+function resizeInput() {
+    this.style.width = this.value.length + "ch"
+}
 
 class InputFieldHook {
     constructor(selector, id) {
         this.id = id
         let hookedInput = document.getElementById(id).querySelector('input')
-        hookedInput.addEventListener('input',  checking)
+        hookedInput.addEventListener('input', resizeInput)
+        hookedInput.addEventListener('input', checking)
         hookedInput.addEventListener('keypress', enterino => {
             if (enterino.key === 'Enter') {
                 selector.childNodes[1].data = hookedInput.value
@@ -120,16 +123,19 @@ class InputFieldHook {
 
 class ButtonSet {
     constructor(selector, name, name2, name3){
-        new EditButton(selector, document.createElement('button'), name)
-        new DoneButton(selector, document.createElement('button'), name2)
-        new DeleteButton(selector, document.createElement('button'), name3)
+        let buttonframe = document.createElement('div')
+        buttonframe.className = 'buttonSet'
+        let createbuttonframe = selector.appendChild(buttonframe)
+        new EditButton(selector, createbuttonframe, document.createElement('button'), name)
+        new DoneButton(selector, createbuttonframe, document.createElement('button'), name2)
+        new DeleteButton(selector, createbuttonframe, document.createElement('button'), name3)
     }
 }
 
 class EditButton {
-    constructor(selector, attachment, name) {
-        selector.appendChild(attachment).textContent = name
-        selector.appendChild(attachment).addEventListener('click', () =>
+    constructor(selector, buttonsetdiv, attachment, name) {
+        buttonsetdiv.appendChild(attachment).textContent = name
+        buttonsetdiv.appendChild(attachment).addEventListener('click', () =>
             {
             for (let i in container) {
                 if (container[i].id === parseInt(selector.id)) {
@@ -148,9 +154,9 @@ class EditButton {
 }
 
 class DoneButton {
-    constructor(selector, attachment, name) {
-        selector.appendChild(attachment).textContent = name
-        selector.appendChild(attachment).addEventListener('click', () =>
+    constructor(selector, buttonsetdiv, attachment, name) {
+        buttonsetdiv.appendChild(attachment).textContent = name
+        buttonsetdiv.appendChild(attachment).addEventListener('click', () =>
             {
             for (let i in container) {
                 if (container[i].id === parseInt(selector.id)) {
@@ -166,9 +172,9 @@ class DoneButton {
 }
 
 class DeleteButton {
-    constructor(selector, attachment, name) {
-        selector.appendChild(attachment).textContent = name
-        selector.appendChild(attachment).addEventListener('click', () =>
+    constructor(selector, buttonsetdiv, attachment, name) {
+        buttonsetdiv.appendChild(attachment).textContent = name
+        buttonsetdiv.appendChild(attachment).addEventListener('click', () =>
             {
             for(let i in container) {
                 if (container[i].id === parseInt(selector.id)) {
@@ -287,7 +293,7 @@ function pagePickContent (number, selectedRange) {
             new PageCreate(output)
             break;
         default:
-            output = pre.slice(selectedRange * (number - 1), rangeMultiplier)
+            output = pre.slice(selectedRange * number - selectedRange, rangeMultiplier)
             new PageCreate(output)
             break;
     }
@@ -309,5 +315,7 @@ class PageCreate {
 }
 
 function liEraser () {
-    while (list.firstChild) {list.removeChild(list.lastChild)}
+    while (list.firstChild) {
+        list.removeChild(list.lastChild)
+    }
 }

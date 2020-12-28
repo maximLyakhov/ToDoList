@@ -2,3 +2,5 @@
 /.code-workspace
 /.gitignore
 /.nojekyll
+/node_modules
+/.json
