@@ -135,6 +135,7 @@ class ButtonSet {
 class EditButton {
     constructor(selector, buttonsetdiv, attachment, name) {
         buttonsetdiv.appendChild(attachment).textContent = name
+        buttonsetdiv.appendChild(attachment).classList.add('waves-effect', 'waves-light', 'btn-small')
         buttonsetdiv.appendChild(attachment).addEventListener('click', () =>
             {
             for (let i in container) {
@@ -156,6 +157,7 @@ class EditButton {
 class DoneButton {
     constructor(selector, buttonsetdiv, attachment, name) {
         buttonsetdiv.appendChild(attachment).textContent = name
+        buttonsetdiv.appendChild(attachment).classList.add('waves-effect', 'waves-light', 'btn-small')
         buttonsetdiv.appendChild(attachment).addEventListener('click', () =>
             {
             for (let i in container) {
@@ -174,6 +176,7 @@ class DoneButton {
 class DeleteButton {
     constructor(selector, buttonsetdiv, attachment, name) {
         buttonsetdiv.appendChild(attachment).textContent = name
+        buttonsetdiv.appendChild(attachment).classList.add('waves-effect', 'waves-light', 'btn-small')
         buttonsetdiv.appendChild(attachment).addEventListener('click', () =>
             {
             for(let i in container) {
@@ -272,6 +275,7 @@ class Paginator {
                 let createPageButton = document.createElement('button')
                 let page = paginator.appendChild(createPageButton)
                 page.className = 'pageButton'
+                page.classList.add('waves-effect', 'waves-light', 'btn-small')
                 page.textContent = number
                 page.addEventListener('click', () => pagePickContent(number, selectedRange))})
         } else {
@@ -283,7 +287,6 @@ class Paginator {
 
 function pagePickContent (number, selectedRange) {
     let rangeMultiplier = number * selectedRange
-    console.log('Picked page number: ' + number);
     let output = new Array;
     let pre = container.reverse()
     // rewrite to sort method
@@ -319,3 +322,4 @@ function liEraser () {
         list.removeChild(list.lastChild)
     }
 }
+

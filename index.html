@@ -5,38 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ToDoList</title>
     <link rel="icon" href="favicon.ico" type="image/x-icon"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class='header_'>
         <div class="mottou">To<br>Do<br>Blocks</div>
         <div class='inputFrame'>
-            <div class="holder"><input id='input' type="text" placeholder="ToBeDone..." autofocus></div>
-            <div class="addToDo">Add!</div>
-            <div class="choosrs">
-                <select id="switcher" size="1">
-                    <option disabled >Folder</option>
-                    <option value="1" selected="selected">All</option>
-                    <option value="2" >In progress</option>
-                    <option value="3">Done</option>
-                </select>
-                <select id="itemsOnPage" size="1">
-                    <option disabled  selected="selected">Items on page</option>
-                    <option value="5">5</option>
-                    <option value="10">10</option>
-                    <option value="20">20</option>
-                    <option value="reset">Reset</option>
-                    </select>
-                </div>
+            <div class="holder">
+                <input id='input' type="text" placeholder="ToBeDone..." autofocus></div>
+                <button class="btn waves-effect waves-light">
+                    <i class="addToDo material-icons center">Add</i>
+                </button>
         </div>
-    </div>
-    <div class='page_'>
-        <div class="leftField_">
+        <div class="selectors">
+            <select id="switcher" size="1" class="input-field col s12">
+                <option disabled >Folder</option>
+                <option value="1" selected="selected">All</option>
+                <option value="2" >In progress</option>
+                <option value="3">Done</option>
+            </select>
+            <select id="itemsOnPage" size="1" class="input-field col s12">
+                <option disabled  selected="selected">Items on page</option>
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="reset">Reset</option>
+            </select>
             <div class="pages"></div>
         </div>
-        <ul class='list'>
-        </ul>
-        <div class="rightfield_"></div>
+    </div>
+    <ul class='list'>
+    </ul>
     </div>
 <script src='index.js'></script>
 </body>
